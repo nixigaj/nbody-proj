@@ -1,26 +1,43 @@
-from src.types 
-import 
+from custom_types import particle_type
+from utils import load_bodies_file
+from constants import *
 import numpy as np
 
-N = 2 # Number of celestial bodies
-G = 100./N # Gravitational constant
-# LxW dimentionless domain L=W=1 such that the x and y positions will be between 0 and 1
-L = 1.
-W = 1.
-dt = 10e-5 # (Delta time) Change in time per iteration in simulation (in seconds)
 
-def gravitational_force_on_particle(particle_i, remaining_particles):
-    Force = 0
-    for particle_j in remaining_particles:
+def gravitational_force_on_particle(particle_i, all_particles):
+    N = all_particles.size # Number of celestial bodies
+    G = 100./N # Gravitational constant
+    force = np.array([0.,0.])
+    for particle_j in all_particles:
         # Vector describing the position of particle_i relative to particle_j
-        R_ij = np.array(particle_i['x_position'] - particle_j['x_position'],
-                        particle_i['y_position'] - particle_j['y_position'] )
+        R_ij = np.array([particle_i['x_position'] - particle_j['x_position'],
+                        particle_i['y_position'] - particle_j['y_position']] )
 
         # r_ij describles the distance between particle_i and particle_j
-        r_ij = np.sqrt(np.pow(R_ij[0], 2)  + np.power(R_ij[1], 2))
-        Force += r_ij
-    return Force
+        r_ij = np.sqrt(pow(R_ij[0], 2)  + pow(R_ij[1], 2))
+        coefficient = particle_j['mass']/(r_ij + epsilon)
+        force += [R_ij[0] * coefficient, R_ij[1] * coefficient]
+    
+    force *= G * particle_i['mass']
+
+    return force
 
 
-if __name__ = "__main__":
-    print(gravitational_force_on_particle())
+if __name__ == "__main__":
+#    particles = np.array([[
+#    ('x_position', 0.5),
+#    ('y_position', 0.5),
+#    ('mass', 1.2),
+#    ('x_velocity', 5),
+#    ('y_velocity', 5),
+#    ('brightness', 0)
+#],[
+#    ('x_position', 0.3),
+#    ('y_position', 0.8),
+#    ('mass', 0.8),
+#    ('x_velocity', -82.0),
+#    ('y_velocity', 0),
+#    ('brightness', 0)
+#]], dtype=particle_type)
+    particles = load_bodies_file('../input_data/circles_N_2.gal')
+    print(gravitational_force_on_particle(particles[0], particles))
