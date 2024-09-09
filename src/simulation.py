@@ -8,6 +8,8 @@ def gravitational_force_on_particle(particle_i, all_particles):
     N = all_particles.size # Number of celestial bodies
     G = 100./N # Gravitational constant
     force = np.array([0.,0.])
+    
+    # sum up all of the masses in proportion to their distance from particle_j
     for particle_j in all_particles:
         # Vector describing the position of particle_i relative to particle_j
         R_ij = np.array([particle_i['x_position'] - particle_j['x_position'],
@@ -17,27 +19,21 @@ def gravitational_force_on_particle(particle_i, all_particles):
         r_ij = np.sqrt(pow(R_ij[0], 2)  + pow(R_ij[1], 2))
         coefficient = particle_j['mass']/(r_ij + epsilon)
         force += [R_ij[0] * coefficient, R_ij[1] * coefficient]
-    
-    force *= G * particle_i['mass']
 
+    # Complete the equation for force
+    force *= G * particle_i['mass']
     return force
 
 
+def set_new_particle_velocity(particle, acting_force):
+    print("prev velocity: [{}, {}]".format(particle['x_velocity'], particle['y_velocity']))
+    particle['x_velocity'] += dt * acting_force[0]
+    particle['y_velocity'] += dt * acting_force[1]
+    print("new velocity: [{}, {}]".format(particle['x_velocity'], particle['y_velocity']))
+
 if __name__ == "__main__":
-#    particles = np.array([[
-#    ('x_position', 0.5),
-#    ('y_position', 0.5),
-#    ('mass', 1.2),
-#    ('x_velocity', 5),
-#    ('y_velocity', 5),
-#    ('brightness', 0)
-#],[
-#    ('x_position', 0.3),
-#    ('y_position', 0.8),
-#    ('mass', 0.8),
-#    ('x_velocity', -82.0),
-#    ('y_velocity', 0),
-#    ('brightness', 0)
-#]], dtype=particle_type)
     particles = load_bodies_file('../input_data/circles_N_2.gal')
-    print(gravitational_force_on_particle(particles[0], particles))
+    force = gravitational_force_on_particle(particles[0], particles)
+    print("force: {}".format(force))
+    set_new_particle_velocity(particles[0], force)
+
