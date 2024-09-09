@@ -2,7 +2,7 @@ import sys
 
 import numpy as np
 
-from src.types import body_type
+import custom_types
 
 
 def print_body(body):
@@ -28,5 +28,5 @@ def load_bodies_file(path):
     reshaped_data = data.reshape((num_bodies, 6))
 
     # Convert the reshaped data into the body_type structured array
-    bodies = np.array([tuple(row) for row in reshaped_data], dtype=body_type)
+    bodies = np.array([tuple(row) for row in reshaped_data], dtype=custom_types.body_type)
     return bodies

@@ -7,3 +7,5 @@ cmp
 print
 
 **.venv
+# Ignore python cache
+**__pycache__
