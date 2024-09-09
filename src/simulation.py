@@ -1,4 +1,7 @@
+from src.types 
+import 
 import numpy as np
+
 N = 2 # Number of celestial bodies
 G = 100./N # Gravitational constant
 # LxW dimentionless domain L=W=1 such that the x and y positions will be between 0 and 1
@@ -14,6 +17,10 @@ def gravitational_force_on_particle(particle_i, remaining_particles):
                         particle_i['y_position'] - particle_j['y_position'] )
 
         # r_ij describles the distance between particle_i and particle_j
-        r_ij = np.sqrt(np.pow(R_ij[0], 2)  + np.pow(R_ij[1], 2))
-        F += r_ij
-    return F
+        r_ij = np.sqrt(np.pow(R_ij[0], 2)  + np.power(R_ij[1], 2))
+        Force += r_ij
+    return Force
+
+
+if __name__ = "__main__":
+    print(gravitational_force_on_particle())
