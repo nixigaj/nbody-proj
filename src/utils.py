@@ -1,7 +1,4 @@
-import sys
-
 import numpy as np
-
 import custom_types
 
 
@@ -25,8 +22,8 @@ def load_bodies_file(path):
 
     # Ensure the data is reshaped into chunks of 6 values (for each body)
     num_bodies = data.size // 6
-    reshaped_data = data.reshape((num_bodies, 6))
+    bodies = data.reshape((num_bodies, 6))
 
     # Convert the reshaped data into the body_type structured array
-    bodies = np.array([tuple(row) for row in reshaped_data], dtype=custom_types.particle_type)
+    #bodies = np.array([tuple(row) for row in reshaped_data], dtype=custom_types.particle_type)
     return bodies
