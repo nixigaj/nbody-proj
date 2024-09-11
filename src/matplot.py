@@ -11,7 +11,7 @@ def show_particles_single(particles: np.ndarray):
     ax.set_facecolor('black')
 
     # Plot the positions of the objects
-    plt.scatter(particles[:,0], particles[:,1], c='white', s=10)  # white dots with size 10
+    plt.scatter(particles['x_position'], particles['y_position'], c='white', s=10)  # white dots with size 10
 
     # Add x and y axis decorators
     plt.axhline(0, color='white', linewidth=0.5)  # Horizontal axis
@@ -30,11 +30,12 @@ def show_particles_single(particles: np.ndarray):
     # Display the plot
     plt.show()
 
-def show_particles_multi(particles: np.ndarray, update_fun):
+
+def show_particles_multi(particles: np.ndarray, no_frames, update_fun):
     # Create the plot
     fig, ax = plt.subplots(figsize=(6, 6))
     ax.set_facecolor('black')
-    scat = ax.scatter(particles[:,0], particles[:,1], c='white', s=10)
+    scat = ax.scatter(particles['x_position'], particles['x_position'], c='white', s=10)
 
     # Set x and y-axis limits to range [0, 1]
     plt.xlim(0, 1)
@@ -52,7 +53,7 @@ def show_particles_multi(particles: np.ndarray, update_fun):
         return scat,
 
     # Create the animation
-    ani = FuncAnimation(fig, update, frames=200, interval=16, blit=True)
+    ani = FuncAnimation(fig, update, frames=no_frames, interval=16, blit=True)
 
     # Show the animation
     plt.show()

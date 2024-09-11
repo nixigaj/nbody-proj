@@ -1,85 +1,79 @@
-from utils import load_bodies_file
-from constants import *
+import utils
+import constants
 import numpy as np
-from matplot import show_particles_single
-#import scipy.integrate as integrate
-
-# Constants for better readability in code
-ITERATIONS = 200
-X = 0
-Y = 1
+import matplot
+import custom_types
 
 
-def symplectic_euler(bodies, force_func, dt, n_steps):
-    resulting_bodies = np.zeros((n_steps + 1, bodies[:,0].size, bodies[0,:].size))
-    resulting_bodies[0,:] = bodies 
-
-    column_size = bodies[:,0].size
-
-    body_pos = resulting_bodies[:,:,0:2]
-    body_vel = resulting_bodies[:,:,3:5]
-    #print("bodies: {}.".format(bodies))
-    #print("bodies: \n{}\nbody_pos: \n{}".format(bodies[:,0:2],body_pos[0]))
-    mass = bodies[:,2]
+def symplectic_euler(init_particles, calc_force_func, dt, n_steps):
+    # Create a structured array to store results for all time steps
+    res_partic_seq = np.zeros((n_steps + 1, len(init_particles)), dtype=custom_types.particle_type)
+    res_partic_seq[0] = init_particles  # This should now work correctly
 
     for n in range(n_steps):
         # Determine the forces acting on each celestial body
-        force = force_func(body_pos[n], mass)
+        force = calc_force_func(res_partic_seq[n])
 
-        acceleration = np.zeros((force.size, 2))
+        # Update velocity
+        res_partic_seq[n + 1]['x_velocity'] = (
+                res_partic_seq[n]['x_velocity'] + dt * force['x'] / res_partic_seq[n]['mass'])
+        res_partic_seq[n + 1]['y_velocity'] = (
+                res_partic_seq[n]['y_velocity'] + dt * force['y'] / res_partic_seq[n]['mass'])
 
-        for i in range(column_size):
-            acceleration[i][X] = force[i][X]/mass[i]
-            acceleration[i][Y] = force[i][Y]/mass[i]
+        # Update position
+        res_partic_seq[n + 1]['x_position'] = (
+                res_partic_seq[n]['x_position'] + dt * res_partic_seq[n + 1]['x_velocity'])
+        res_partic_seq[n + 1]['y_position'] = (
+                res_partic_seq[n]['y_position'] + dt * res_partic_seq[n + 1]['y_velocity'])
 
-        for i in range(column_size):
-            body_vel[n + 1][i][X] = body_vel[n][i][X] + dt * acceleration[i][X]
-            body_vel[n + 1][i][Y] = body_vel[n][i][Y] + dt * acceleration[i][Y]
+        # Copy mass and brightness
+        res_partic_seq[n + 1]['mass'] = res_partic_seq[n]['mass']
+        res_partic_seq[n + 1]['brightness'] = res_partic_seq[n]['brightness']
 
-        for i in range(column_size):
-            body_pos[n+1][i][X] = body_pos[n][i][X] + dt * body_vel[n+1][i][X]
-            body_pos[n+1][i][Y] = body_pos[n][i][Y] + dt * body_vel[n+1][i][Y]
-
-    return resulting_bodies
+    return res_partic_seq
 
 
+def calculate_force(paricles):
+    no_particles = len(paricles)  # Number of celestial bodies
+    g = 100 / no_particles  # Gravitational constant
+    force = np.zeros(no_particles, dtype=custom_types.vector2d_type)
 
-def calculate_force(position, mass):
-    N = position[:,0].size # Number of celestial bodies
-    G = 100./N # Gravitational constant
-    force = np.zeros((N, 2), dtype=np.float64)
-
-    # sum up all of the masses in proportion to their distance from particle_j
-    for i in range(N):
-        for j in range(N):
+    # Sum up all masses in proportion to their distance from particle_j
+    for i in range(no_particles):
+        for j in range(no_particles):
             if i == j:
                 continue
 
             # Vector describing the position of particle_i relative to particle_j
-            R_ij = np.array([position[i][X] - position[j][X],
-                            position[i][Y] - position[j][Y]], dtype=np.float64)
+            R_ij = np.array((paricles[i]['x_position'] - paricles[j]['x_position'],
+                             paricles[i]['y_position'] - paricles[j]['y_position']),
+                            dtype=custom_types.vector2d_type)
 
-            # r_ij describles the distance between particle_i and particle_j
-            r_ij = np.sqrt(pow(R_ij[X], 2)  + pow(R_ij[Y], 2))
+            # r_ij describes the distance between particle_i and particle_j
+            r_ij = np.sqrt(R_ij['x'] ** 2 + R_ij['y'] ** 2)
 
-            coefficient = mass[j]/pow(r_ij + epsilon, 3)
+            coefficient = paricles[j]['mass'] / (r_ij + constants.epsilon) ** 3
 
-            force[i] += [R_ij[X] * coefficient, R_ij[Y] * coefficient]
+            force[i]['x'] += R_ij['x'] * coefficient
+            force[i]['y'] += R_ij['y'] * coefficient
 
         # Complete the equation for force
-        force[i] *= (-1) * G * mass[i]
+        force[i]['x'] *= -g * paricles[i]['mass']
+        force[i]['y'] *= -g * paricles[i]['mass']
+
     return force
 
 
 if __name__ == "__main__":
-    particles = load_bodies_file('../input_data/ellipse_N_00010.gal')
-    
+    particles = utils.load_particles_file('input_data/ellipse_N_00010.gal')
+
+    # maybe TODO? solve_ivp
     #resulting_particles = integrate.solve_ivp(nbody_function, [0, dt*ITERATIONS], particles, t_eval=np.arange(0, dt*ITERATIONS, dt))
-    resulting_particles = symplectic_euler(particles, calculate_force, dt, ITERATIONS)
-    show_particles_single(resulting_particles[-1])
-    ref_particles = load_bodies_file('../ref_output_data/ellipse_N_00010_after200steps.gal')
-    #show_particles_single(ref_particles)
 
-    print("particles: {}\n\n".format(resulting_particles[-1]))
-    print("ref particles: {}\n\n".format(ref_particles))
+    iterations = 200
+    resulting_particles = symplectic_euler(particles, calculate_force, constants.dt, iterations)
+    matplot.show_particles_single(resulting_particles[-1])
+    ref_particles = utils.load_particles_file('ref_output_data/ellipse_N_00010_after200steps.gal')
 
+    print("particles:", resulting_particles[-1])
+    print("\nref particles:", ref_particles)

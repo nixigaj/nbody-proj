@@ -3,9 +3,12 @@
 .idea/
 
 # Executables
-cmp
+cmp_gal
 print
 
-**.venv
-# Ignore python cache
+# Python specifics
 **__pycache__
+**.venv
+
+# Output data
+output_data/
