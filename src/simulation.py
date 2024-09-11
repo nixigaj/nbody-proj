@@ -23,6 +23,7 @@ def symplectic_euler(bodies, force_func, dt, n_steps):
     mass = bodies[:,2]
 
     for n in range(n_steps):
+        print("n: {}", n)
         # Determine the forces acting on each celestial body
         force = force_func(body_pos[n], mass)
 
@@ -72,14 +73,14 @@ def calculate_force(position, mass):
 
 
 if __name__ == "__main__":
-    particles = load_bodies_file('../input_data/ellipse_N_00010.gal')
+    particles = load_bodies_file('../input_data/ellipse_N_03000.gal')
     
     #resulting_particles = integrate.solve_ivp(nbody_function, [0, dt*ITERATIONS], particles, t_eval=np.arange(0, dt*ITERATIONS, dt))
-    resulting_particles = symplectic_euler(particles, calculate_force, dt, ITERATIONS)
-    show_particles_single(resulting_particles[-1])
-    ref_particles = load_bodies_file('../ref_output_data/ellipse_N_00010_after200steps.gal')
+    resulting_particles = symplectic_euler(particles, calculate_force, dt, 1)
+    #show_particles_single(resulting_particles[-1])
+    #ref_particles = load_bodies_file('../ref_output_data/ellipse_N_00010_after200steps.gal')
     #show_particles_single(ref_particles)
 
-    print("particles: {}\n\n".format(resulting_particles[-1]))
-    print("ref particles: {}\n\n".format(ref_particles))
+    #print("particles: {}\n\n".format(resulting_particles[-1]))
+    #print("ref particles: {}\n\n".format(ref_particles))
 
