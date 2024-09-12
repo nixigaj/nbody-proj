@@ -5,15 +5,22 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"strconv"
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("Usage: go run main.go <file_path>")
+	if len(os.Args) != 3 {
+		fmt.Println("Usage: go run main.go <num_iterations> <file_path>")
 		return
 	}
 
-	filePath := os.Args[1]
+	numIterations, err := strconv.Atoi(os.Args[0])
+	if err != nil {
+		fmt.Printf("Error converting number of iterations to integer: %v\n", err)
+		return
+	}
+
+	filePath := os.Args[2]
 	file, err := os.Open(filePath)
 	if err != nil {
 		fmt.Printf("Error opening file: %v\n", err)
@@ -33,10 +40,10 @@ func main() {
 		return
 	}
 
-	particles := int(fileSize / 48)
+	numParticles := fileSize / 48
 
-	for i := 0; i < particles; i++ {
-		offset := int64(i * 48)
+	for i := int64(0); i < numParticles; i++ {
+		offset := i * 48
 		if _, err := file.Seek(offset, 0); err != nil {
 			fmt.Printf("Error seeking file: %v\n", err)
 			return

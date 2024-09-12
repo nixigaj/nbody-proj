@@ -5,6 +5,7 @@
 # Executables
 cmp_gal
 print
+print_arr
 
 # Python specifics
 **__pycache__

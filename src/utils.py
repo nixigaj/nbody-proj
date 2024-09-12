@@ -35,3 +35,37 @@ def write_particles_file(path, particles):
     flattened_data = np.hstack([particles[field].reshape(-1, 1) for field in particles.dtype.names]).flatten()
 
     flattened_data.astype(np.float64).tofile(path)
+
+
+def load_particles_arr_file(path, no_iterations):
+    data = np.fromfile(path, dtype=np.float64)
+
+    # Calculate the number of particles based on the total size and number of iterations
+    num_particles = data.size // (6 * no_iterations)
+
+    # Reshape the data into a 3D array: (no_iterations, num_particles, 6)
+    reshaped_data = data.reshape((no_iterations, num_particles, 6))
+
+    # Convert the reshaped data into an array of particle_type structured arrays
+    particles_arr = np.array([
+        np.array([tuple(particle) for particle in frame], dtype=custom_types.particle_type)
+        for frame in reshaped_data
+    ])
+
+    return particles_arr
+
+
+def write_particles_arr_file(path, particles_arr):
+    # Ensure particles_arr is a 2D array of particle_type structured arrays
+    assert particles_arr.ndim == 2 and particles_arr.dtype == custom_types.particle_type
+
+    # Flatten the structured array into a 3D array of float64 values
+    flattened_data = np.array([
+        np.hstack([frame[field].reshape(-1, 1) for field in custom_types.particle_type.names]).flatten()
+        for frame in particles_arr
+    ])
+
+    # Further flatten to 1D for file writing
+    flattened_data = flattened_data.flatten()
+
+    flattened_data.astype(np.float64).tofile(path)
