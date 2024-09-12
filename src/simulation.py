@@ -32,34 +32,12 @@ def symplectic_euler(init_particles, calc_force_func, dt, n_steps):
     return res_partic_seq
 
 
+
 def calculate_force(paricles):
     no_particles = len(paricles)  # Number of celestial bodies
     G = 100 / no_particles  # Gravitational constant
     force = np.zeros(no_particles, dtype=custom_types.vector2d_type)
     R_ij =  np.array([0.0, 0.0], dtype=np.float64)
-
-    # Sum up all masses in proportion to their distance from particle_j
-    # for i in range(no_particles):
-    #     for j in range(no_particles):
-    #         if i == j:
-    #             continue
-    #
-    #         # Vector describing the position of particle_i relative to particle_j
-    #         R_ij = np.array((paricles[i]['x_position'] - paricles[j]['x_position'],
-    #                          paricles[i]['y_position'] - paricles[j]['y_position']),
-    #                         dtype=custom_types.vector2d_type)
-    #
-    #         # r_ij describes the distance between particle_i and particle_j
-    #         r_ij = np.sqrt(R_ij['x'] ** 2 + R_ij['y'] ** 2)
-    #
-    #         coefficient = paricles[j]['mass'] / (r_ij + epsilon) ** 3
-    #
-    #         force[i]['x'] += R_ij['x'] * coefficient
-    #         force[i]['y'] += R_ij['y'] * coefficient
-    #
-    #     # Complete the equation for force
-    #     force[i]['x'] *= -G * paricles[i]['mass']
-    #     force[i]['y'] *= -G * paricles[i]['mass']
 
     for i in range(no_particles):
         for j in range(i + 1, no_particles):
@@ -73,17 +51,19 @@ def calculate_force(paricles):
 
             force[i]['x'] += fx
             force[i]['y'] += fy
-            force[j]['x'] += fx
-            force[j]['y'] += fy
+            force[j]['x'] += -fx
+            force[j]['y'] += -fy
 
     return force
 
 
 if __name__ == "__main__":
-    particles = load_particles_file('../input_data/ellipse_N_03000.gal')
+    particles = load_particles_file('../input_data/circles_N_2.gal')
+    #print(particles)
+    #print(np.transpose(particles))
 
     #resulting_particles = integrate.solve_ivp(nbody_function, [0, dt*ITERATIONS], particles, t_eval=np.arange(0, dt*ITERATIONS, dt))
-    resulting_particles = symplectic_euler(particles, calculate_force, dt, 1)
+    #resulting_particles = symplectic_euler(particles, calculate_force, dt, 1)
     #show_particles_single(resulting_particles[-1])
     #ref_particles = load_bodies_file('../ref_output_data/ellipse_N_00010_after200steps.gal')
     #show_particles_single(ref_particles)
