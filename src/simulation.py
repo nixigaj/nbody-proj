@@ -1,7 +1,6 @@
 from utils import load_particles_file
 from constants import *
 import numpy as np
-import matplot
 import custom_types
 
 
@@ -11,7 +10,6 @@ def symplectic_euler(init_particles, calc_force_func, dt, n_steps):
     res_partic_seq[0] = init_particles  # This should now work correctly
 
     for n in range(n_steps):
-        print("n: {}", n)
         # Determine the forces acting on each celestial body
         force = calc_force_func(res_partic_seq[n])
 
@@ -68,10 +66,10 @@ def calculate_force(paricles):
             R_ij[0] = paricles[i]['x_position'] - paricles[j]['x_position']
             R_ij[1] = paricles[i]['y_position'] - paricles[j]['y_position']
 
-            r_ij = np.sqrt(R_ij[0] ** 2 + R_ij[1] ** 2)
+            r_ij = np.sqrt(pow(R_ij[0], 2) + pow(R_ij[1],2))
 
             fx = R_ij[0] * -G * paricles[i]['mass'] * paricles[j]['mass'] / (r_ij + epsilon) ** 3
-            fy = R_ij[0] * -G * paricles[i]['mass'] * paricles[j]['mass'] / (r_ij + epsilon) ** 3
+            fy = R_ij[1] * -G * paricles[i]['mass'] * paricles[j]['mass'] / (r_ij + epsilon) ** 3
 
             force[i]['x'] += fx
             force[i]['y'] += fy
