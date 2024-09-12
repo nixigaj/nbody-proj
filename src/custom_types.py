@@ -8,3 +8,5 @@ particle_type = np.dtype([
     ('y_velocity', np.float64),
     ('brightness', np.float64)
 ])
+
+vector2d_type = np.dtype([('x', np.float64), ('y', np.float64)])

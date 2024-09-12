@@ -18,5 +18,5 @@ Programatically simulating bodies interaction in space.
 make
 ```
 
-The executables for the helper tools are now available as `./cmp` for comparing GAL files
+The executables for the helper tools are now available as `./cmp_gal` for comparing GAL files
 and `./print` for printing the contents of GAL files in a human readable fashion.
