@@ -11,7 +11,7 @@ all: cmp_gal print
 
 # Build GAL file comparison program
 cmp_gal: $(C_SRC)
-	$(CC) $(CFLAGS) $(C_SRC) -o $(BUILD_DIR)/cmp_gal
+	$(CC) $(CFLAGS) $(C_SRC) -o $(BUILD_DIR)/cmp_gal -lm
 
 # Build human print program for GAL files
 print: $(GO_SRC)
