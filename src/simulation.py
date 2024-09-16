@@ -2,6 +2,7 @@ from utils import load_particles_file
 from constants import *
 import numpy as np
 import custom_types
+from numba import njit
 
 
 def symplectic_euler(init_particles, calc_force_func, dt, n_steps):
@@ -32,7 +33,7 @@ def symplectic_euler(init_particles, calc_force_func, dt, n_steps):
     return res_partic_seq
 
 
-
+@njit
 def calculate_force(paricles):
     no_particles = len(paricles)  # Number of celestial bodies
     G = 100 / no_particles  # Gravitational constant
