@@ -23,15 +23,6 @@ def calculate(no_iterations, input_file, output_file, full_sim_output_file=None)
     if full_sim_output_file is not None:
         utils.write_particles_arr_file(full_sim_output_file, resulting_particles)
 
-    def update_fun(frame, particles):
-        index = frame % no_iterations
-        updated_particles = resulting_particles[index]
-
-        particles['x_position'][:] = updated_particles['x_position']
-        particles['y_position'][:] = updated_particles['y_position']
-
-    matplot.show_particles_multi(resulting_particles[0], no_iterations, update_fun)
-
 
 def show(no_iterations, full_sim_input_file):
     resulting_particles = utils.load_particles_arr_file(full_sim_input_file, no_iterations)
