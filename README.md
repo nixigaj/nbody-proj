@@ -34,6 +34,8 @@ and `./print` for printing the contents of GAL files in a human readable fashion
 ### Machine specifications
 
 - **OS:** Red Hat Enterprise Linux 9.3
+- **Kernel version:** 5.14.0
+- **Python/Pip version:** 3.12.1
 - **CPU:** AMD Ryzen 5 5600 at 3.5 GHz (6 cores, 12 threads)
 - **RAM:** 64GB Dual-channel ECC DDR4 at 3000 MT/s
 
