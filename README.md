@@ -47,3 +47,9 @@ and `./print` for printing the contents of GAL files in a human readable fashion
 | Numba JIT for force       | 3.181    | 4.556    | 0.136      |
 
 Note that the original force function could not be JIT compiled by Numba.
+
+### Data table for 10000 bodies and 1000 steps
+
+| Test                | Real (s) | User (s) | Kernel (s) |
+|---------------------|----------|----------|------------|
+| Numba JIT for force | 220.46   | 221.173  | 0.300      |
