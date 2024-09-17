@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 
+# Show a single frame
 def show_particles_single(particles: np.ndarray):
     plt.figure(figsize=(6, 6))
     ax = plt.gca()
@@ -31,6 +32,7 @@ def show_particles_single(particles: np.ndarray):
     plt.show()
 
 
+# Show an array of frames as an animation
 def show_particles_multi(particles: np.ndarray, no_frames, update_fun):
     # Create the plot
     fig, ax = plt.subplots(figsize=(6, 6))
@@ -47,6 +49,7 @@ def show_particles_multi(particles: np.ndarray, no_frames, update_fun):
     ax.tick_params(axis='x', colors='white')
     ax.tick_params(axis='y', colors='white')
 
+    # This function calles the update_fun passed into the function and then updates the scatter plot.
     def update(frame):
         update_fun(frame, particles)
         scat.set_offsets(np.c_[particles['x_position'], particles['y_position']])  # Update scatter plot

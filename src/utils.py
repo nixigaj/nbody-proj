@@ -17,6 +17,7 @@ def print_body_arr(particles):
         print_particle(particle)
 
 
+# @param path The file path to the GAL-file containing the state of a collection of particles
 def load_particles_file(path):
     data = np.fromfile(path, dtype=np.float64)
 
@@ -30,6 +31,8 @@ def load_particles_file(path):
     return particles
 
 
+# @param path The file path to where to write the resulting particles as a GAL-file
+# @param particles The frame of particles to write to the file
 def write_particles_file(path, particles):
     # Convert structured array into a flat array of float64 values for saving to file
     flattened_data = np.hstack([particles[field].reshape(-1, 1) for field in particles.dtype.names]).flatten()
@@ -37,6 +40,7 @@ def write_particles_file(path, particles):
     flattened_data.astype(np.float64).tofile(path)
 
 
+# TODO This function does not actually currently work properly
 def load_particles_arr_file(path, no_iterations):
     data = np.fromfile(path, dtype=np.float64)
 
@@ -55,6 +59,7 @@ def load_particles_arr_file(path, no_iterations):
     return particles_arr
 
 
+# TODO This function does not actually currently work properly
 def write_particles_arr_file(path, particles_arr):
     # Ensure particles_arr is a 2D array of particle_type structured arrays
     assert particles_arr.ndim == 2 and particles_arr.dtype == custom_types.particle_type

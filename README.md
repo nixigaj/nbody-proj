@@ -18,7 +18,18 @@ This program is only tested on Glibc-based Linux distributions.
 
 ### Running simulation
 
-TODO
+Install Python dependencies:
+
+```sh
+pip install -r requirements.txt
+```
+
+Execute the program with `./src/main.py`
+
+```
+Usage: ./src/main.py calc [no_iterations] [input_file] [output_file] [full_sim_output_file (optional)]
+       ./src/main.py show [no_iterations] [full_sim_input_file]
+```
 
 ### Building helper tools
 
@@ -36,7 +47,7 @@ and `./print` for printing the contents of GAL files in a human readable fashion
 - **OS:** Red Hat Enterprise Linux 9.3
 - **Kernel version:** 5.14.0
 - **Python/Pip version:** 3.12.1
-- **CPU:** AMD Ryzen 5 5600 at 3.5 GHz (6 cores, 12 threads)
+- **CPU:** AMD Ryzen 5 5600 at 3.5 GHz (6 cores, 12 threads, AVX2 support)
 - **RAM:** 64GB Dual-channel ECC DDR4 at 3000 MT/s
 
 ### Data table for 3000 bodies and 100 steps

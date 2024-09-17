@@ -2,3 +2,7 @@ numpy
 scipy
 matplotlib
 numba
+PyQt6
+PySide6
+PyQt5
+PySide2
